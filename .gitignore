@@ -5,4 +5,6 @@ test.py
 agents.py
 chat_app.py
 floorplan_model_weights.pth
+docker-compose.yml
+Dockerfile
 
