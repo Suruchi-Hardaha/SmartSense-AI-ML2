@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pandas
+openpyxl
+sqlalchemy
+psycopg2-binary
+pinecone-client
+sentence-transformers
+torch           # ensure you pick a version compatible with your CUDA (if using GPU)
+torchvision
+PyPDF2
+python-multipart
+Pillow
+tqdm
