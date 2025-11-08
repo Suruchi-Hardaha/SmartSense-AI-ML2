@@ -1,16 +1,59 @@
-fastapi
-uvicorn[standard]
-python-dotenv
-pandas
-openpyxl
-sqlalchemy
-psycopg2-binary
-pinecone
-sentence-transformers
-torch           # ensure you pick a version compatible with your CUDA (if using GPU)
-torchvision
-PyPDF2
-python-multipart
-Pillow
-tqdm
-gdown 
+# Core Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+websockets==12.0
+
+# Environment & Config
+python-dotenv==1.0.0
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+redis==5.0.1
+
+# Data Processing
+pandas==2.1.3
+openpyxl==3.1.2
+numpy==1.24.3
+
+# Machine Learning & AI
+torch==2.1.1
+torchvision==0.16.1
+sentence-transformers==2.2.2
+transformers==4.35.2
+pinecone-client==2.2.4
+openai==1.3.7  # Optional for enhanced RAG
+
+# NLP
+spacy==3.7.2
+# Run after install: python -m spacy download en_core_web_sm
+
+# Computer Vision
+Pillow==10.1.0
+opencv-python==4.8.1.78
+
+# PDF Processing
+PyPDF2==3.0.1
+reportlab==4.0.7
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Web Scraping & Research
+aiohttp==3.9.1
+beautifulsoup4==4.12.2
+requests==2.31.0
+
+# Graph & Planning
+networkx==3.2.1
+
+# File Downloads
+gdown==4.7.1
+
+# Progress & Logging
+tqdm==4.66.1
+
+# API Documentation
+pydantic==2.5.2

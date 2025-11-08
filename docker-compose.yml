@@ -1,16 +1,121 @@
-version: "3.9"
+# docker-compose.yml
+version: '3.8'
+
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: smartsense-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: smartsense
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - smartsense-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Memory Component
+  redis:
+    image: redis:7-alpine
+    container_name: smartsense-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - smartsense-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
   backend:
-    build: .
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: smartsense-backend
     ports:
       - "8001:8001"
-    env_file:
-      - backend/.env
+    environment:
+      # Database
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DB: smartsense
+      PG_USER: postgres
+      PG_PASS: admin
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      
+      # Pinecone (add your actual API key)
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_INDEX: smartsense-properties
+      
+      # Embedding Model
+      EMBED_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      
+      # Model Configuration
+      MODEL_WEIGHTS: /app/models/floorplan_model_weights.pth
+      USE_CUDA: 0
+      NUM_CLASSES: 9
+      
+      # Optional API Keys (add if available)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      TAVILY_API_KEY: ${TAVILY_API_KEY}
+      # GOOGLE__API_KEY: ${GOOGLE__API_KEY}
+    
+    volumes:
+      - ./backend:/app
+      - ./data:/data
+      - ./models:/app/models
+      - ./reports:/app/reports
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    networks:
+      - smartsense-network
+    
+    command: uvicorn app:app --host 0.0.0.0 --port 8001 --reload
+
+  # Frontend
   frontend:
-    image: python:3.11-slim
-    working_dir: /app
-    command: streamlit run frontend/app.py --server.port 8501 --server.address 0.0.0.0
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: smartsense-frontend
     ports:
       - "8501:8501"
+    environment:
+      BACKEND_URL: http://backend:8001
     volumes:
       - ./frontend:/app
+    depends_on:
+      - backend
+    networks:
+      - smartsense-network
+    command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+
+networks:
+  smartsense-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
