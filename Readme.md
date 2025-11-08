@@ -47,7 +47,10 @@ self_working/
 | Weight decay     | 0.0005 |
 | Optimizer        | SGD |
 | Loss             | Classification + Regression (per epoch printed) |
-| Model Save Path  | `self_working/notebooks/task1/floorplan_model_weights.pth` |
+## 📦 Model Weights
+The trained model weights (~158 MB) can be downloaded from Google Drive:
+
+👉 [Download floorplan_model_weights.pth](https://drive.google.com/file/d/1_hluPXwpSVp6NNV97L8QagRn3SzhAaR4/view?usp=sharing)
 
 **During training:**
 - Each epoch prints total classification and regression loss.
