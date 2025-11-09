@@ -10,7 +10,7 @@ This phase focuses on training a computer-vision model to **parse floorplan imag
 ## Project Structure
 ## Project Structure
 
-![Project Structure](project-structure/ABE065C2-9214-4291-90FE-2B9E29548967.png)
+![Project Structure](project-structure/{ABE065C2-9214-4291-90FE-2B9E29548967.png})
 
 
 
@@ -19,7 +19,7 @@ inside src/backend/.env.example
  i have listed down all the api keys 
 
 #### Backend Development
-1. **Navigate to frontend directory**
+1. **Navigate to backend directory**
 ```bash
    cd src/backend
 ```
@@ -29,10 +29,10 @@ inside src/backend/.env.example
    pip install -r requirements.txt
 ```
 
-3. **Start the frontend application**
+3. **Start the backend application**
 ```bash
   python -m uvicorn app_updated:app --host 0.0.0.0 --port 8001 --reload
-
+```
 #### Frontend Development
 1. **Navigate to frontend directory**
 ```bash
