@@ -6,44 +6,44 @@ This phase focuses on training a computer-vision model to **parse floorplan imag
 
 ---
 
+
 ## Project Structure
-smartsense-real-estate/
-├── README.md
-├── docker-compose.yml
-├── .env.example
-├── backend/
-│   ├── agents/
-│   │   ├── __init__.py
-│   │   ├── base.py              # Base agent class and utilities
-│   │   ├── query_router.py      # Intent detection & slot extraction
-│   │   ├── planner.py           # Task decomposition & planning
-│   │   ├── structured_data.py   # SQL queries & database operations
-│   │   ├── rag_agent.py         # Document retrieval & synthesis
-│   │   ├── web_research.py      # Live data fetching
-│   │   ├── report_generation.py # PDF report generation
-│   │   ├── renovation_estimation.py # Cost estimation
-│   │   └── memory.py            # User context & preferences
-│   ├── app_updated.py           # FastAPI main application
-│   ├── orchestrator.py          # Agent coordination engine
-│   ├── parse_floorplan.py       # Computer vision inference
-│   ├── etl.py                   # Data ingestion pipeline
-│   ├── requirements.txt
-│   └── .env.example
-├── frontend/
-│   ├── app_updated.py           # Streamlit UI
-│   └── requirements.txt
-└── models/
-    └── floorplan_model_weights.pth  # Trained CV model
-|
-└── notebooks/
-├── task1/
-│ ├── phase1_floorplan_model_pytorch.ipynb # Training & evaluation notebook
-│ ├── floorplan_model_weights.pth # Trained model weights
-│ ├── parse_floorplan.py # Inference script → JSON output
-│ └── results/ # Evaluation results & visualizations
-└── train-val_dataset_final.coco/
-├── train/ # Annotated training dataset (COCO format)
-└── valid/ # Annotated validation dataset (COCO format)
+project-structure/{ABE065C2-9214-4291-90FE-2B9E29548967}.png
+
+
+## How to run : 
+inside src/backend/.env.example
+ i have listed down all the api keys 
+
+#### Backend Development
+1. **Navigate to frontend directory**
+```bash
+   cd src/backend
+```
+
+2. **Install dependencies**
+```bash
+   pip install -r requirements.txt
+```
+
+3. **Start the frontend application**
+```bash
+  ython -m uvicorn app_updated:app --host 0.0.0.0 --port 8001 --reload
+
+#### Frontend Development
+1. **Navigate to frontend directory**
+```bash
+   cd src/frontend
+```
+
+2. **Install dependencies**
+```bash
+   pip install -r requirements.txt
+```
+
+3. **Start the frontend application**
+```bash
+   streamlit run app_updated.py --server.port 8501
 
 
 
