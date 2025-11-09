@@ -14,24 +14,19 @@ from reportlab.pdfgen import canvas
 import json
 from datetime import datetime
 import logging
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.utils import simpleSplit
-import json
 
-
-# ETL imports
+# ===== ETL imports =====
 from etl import run_etl_from_excel, get_pg_engine, init_pinecone
 from sentence_transformers import SentenceTransformer
 
-#  Logging setup
+# ===== Logging setup =====
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-#  Load environment variables 
+# ===== Load environment variables =====
 load_dotenv()
 
-#  Environment variables 
+# ===== Environment variables =====
 MODEL_WEIGHTS = os.getenv("MODEL_WEIGHTS", "floorplan_model_weights.pth")
 USE_CUDA = os.getenv("USE_CUDA", "0") == "1"
 NUM_CLASSES = int(os.getenv("NUM_CLASSES", "9"))
@@ -50,7 +45,7 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 
 DEVICE = torch.device("cuda" if USE_CUDA and torch.cuda.is_available() else "cpu")
 
-#  App initialization
+# ===== App initialization =====
 app = FastAPI(title="SmartSense AI Real Estate Platform")
 
 # CORS
@@ -62,7 +57,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-#  Folders
+# ===== Folders =====
 TMP_DIR = Path("tmp_parse")
 TMP_DIR.mkdir(exist_ok=True, parents=True)
 MODEL_DIR = Path("models")
@@ -70,7 +65,7 @@ MODEL_DIR.mkdir(exist_ok=True, parents=True)
 REPORTS_DIR = Path("reports")
 REPORTS_DIR.mkdir(exist_ok=True, parents=True)
 
-#  Helper functions 
+# ===== Helper functions =====
 def get_model_weights(model_path_or_url: str) -> str:
     model_path = MODEL_DIR / "floorplan_model_weights.pth"
     if Path(model_path_or_url).exists():
@@ -87,7 +82,30 @@ def get_model_weights(model_path_or_url: str) -> str:
         return str(model_path)
     raise FileNotFoundError(f"Model path does not exist: {model_path_or_url}")
 
-
+# def create_pdf_report(filename: str, parsed_data: dict, detections: list):
+    # pdf_path = TMP_DIR / filename
+    # c = canvas.Canvas(str(pdf_path))
+    # c.setFont("Helvetica", 12)
+    # c.drawString(50, 800, "SmartSense Floorplan Report")
+    # c.drawString(50, 780, "Parsed JSON Data:")
+    # y = 760
+    # for k, v in parsed_data.items():
+    #     c.drawString(60, y, f"{k}: {v}")
+    #     y -= 20
+    # c.drawString(50, y, "Detections:")
+    # y -= 20
+    # for det in detections:
+    #     c.drawString(60, y, f"{det.get('label')} - score: {det.get('score')}")
+    #     y -= 15
+    #     if y < 50:
+    #         c.showPage()
+    #         y = 800
+    # c.save()
+    # return pdf_path
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.utils import simpleSplit
+import json
 
 def create_wrapped_pdf_report(filename: str, report_type: str, data: dict):
     pdf_path = f"./{filename}"
@@ -162,7 +180,7 @@ def create_pdf_report(filename: str, parsed_data: dict, detections: list):
     c.save()
     return pdf_path
 
-#  Load detection model 
+# ===== Load detection model =====
 logger.info("Loading floorplan detection model...")
 DETECT_MODEL = create_model(NUM_CLASSES)
 local_model_path = get_model_weights(MODEL_WEIGHTS)
@@ -171,12 +189,12 @@ DETECT_MODEL.to(DEVICE)
 DETECT_MODEL.eval()
 logger.info("Model loaded successfully.")
 
-# Initialize DB and embedding model 
+# ===== Initialize DB and embedding model =====
 pg_engine = get_pg_engine(PG_USER, PG_PASS, PG_HOST, PG_PORT, PG_DB)
 pinecone_index = init_pinecone(PINECONE_API_KEY, PINECONE_INDEX, dim=384)
 embed_model = SentenceTransformer(EMBED_MODEL)
 
-#  Endpoints
+# ===== Endpoints =====
 @app.get("/")
 async def root():
     return {"status": "running", "message": "SmartSense AI Real Estate Platform"}
@@ -262,14 +280,14 @@ async def download_pdf(filename: str):
         return JSONResponse(status_code=404, content={"error": "PDF not found"})
     return FileResponse(path, media_type="application/pdf", filename=filename)
 
-# Chat endpoint 
+# ===== Chat endpoint =====
 @app.post("/chat")
 async def chat_endpoint(query: str = Form(...), user_id: str = Form(...)):
     message = f"Received your query: {query}"
     data = {}  # Optional: Add property search results
     return {"message": message, "data": data, "citations": []}
 
-#  Search endpoint 
+# ===== Search endpoint =====
 @app.post("/search")
 async def search_endpoint(
     location: str = Form(None),
@@ -292,7 +310,7 @@ async def search_endpoint(
     hits = [match.metadata for match in results.matches]
     return {"query": query, "properties": hits, "count": len(hits)}
 
-# Generate Report endpoint 
+# ===== Generate Report endpoint =====
 @app.post("/generate-report")
 async def generate_report_endpoint(
     report_type: str = Form(...),
@@ -319,6 +337,6 @@ async def generate_report_endpoint(
     c.save()
     return {"success": True, "report": {"report_type": report_type, "download_link": f"/download-pdf/{pdf_filename}"}}
 
-# Run server 
+# ===== Run server =====
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8001, reload=True)

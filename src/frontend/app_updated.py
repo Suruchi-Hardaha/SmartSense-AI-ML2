@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for professional look
+# Custom CSS 
 st.markdown("""
 <style>
     .main-header {
@@ -85,7 +85,7 @@ with st.sidebar:
 
 st.markdown('<h1 class="main-header">SmartSense AI Real Estate Platform</h1>', unsafe_allow_html=True)
 
-# --- Chat Assistant ---
+# Chat Assistant
 if page == "Chat Assistant":
     st.markdown('<h2 class="sub-header">Intelligent Property Assistant</h2>', unsafe_allow_html=True)
     
@@ -126,7 +126,7 @@ if page == "Chat Assistant":
             except Exception as e:
                 st.error(f"Connection error: {str(e)}")
 
-# --- Floorplan Parser ---
+#  Floorplan Parser 
 elif page == "Floorplan Parser":
     st.markdown('<h2 class="sub-header">Floorplan Parser</h2>', unsafe_allow_html=True)
     
@@ -165,7 +165,7 @@ elif page == "Floorplan Parser":
             else:
                 st.error("Failed to parse floorplan")
 
-# --- Reports ---
+# Reports 
 elif page == "Reports":
     st.markdown('<h2 class="sub-header">Generate Reports</h2>', unsafe_allow_html=True)
     
@@ -192,3 +192,63 @@ elif page == "Reports":
                     st.error("Failed to generate report")
             except Exception as e:
                 st.error(f"Error: {str(e)}")
+# Data Ingestion
+elif page == "Data Ingestion":
+    st.markdown('<h2 class="sub-header">Ingest Property Data</h2>', unsafe_allow_html=True)
+
+    excel_file = st.file_uploader("Upload Excel File", type=["xlsx", "xls"])
+    images_dir = st.text_input("Images Directory (server path)", value="/path/to/images")
+    certs_dir = st.text_input("Certificates Directory (optional)", value="")
+
+    if st.button("Start ETL"):
+        if not excel_file:
+            st.warning("Please upload an Excel file.")
+        elif not images_dir:
+            st.warning("Please provide images directory.")
+        else:
+            with st.spinner("Starting ETL..."):
+                files = {"excel_file": (excel_file.name, excel_file, excel_file.type)}
+                data = {"images_dir": images_dir, "certs_dir": certs_dir}
+                try:
+                    resp = requests.post(f"{BACKEND_URL}/ingest", files=files, data=data)
+                    if resp.status_code == 200:
+                        st.success(f"ETL started for file: {excel_file.name}")
+                    else:
+                        st.error(f"Failed: {resp.text}")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+# Property Search
+elif page == "Property Search":
+    st.markdown('<h2 class="sub-header">Search Properties</h2>', unsafe_allow_html=True)
+
+    with st.form("search_form"):
+        location = st.text_input("Location")
+        bhk = st.number_input("BHK", min_value=0, step=1)
+        property_type = st.text_input("Property Type")
+        min_price = st.number_input("Min Price", min_value=0)
+        max_price = st.number_input("Max Price", min_value=0)
+        limit = st.number_input("Results Limit", min_value=1, max_value=50, value=10)
+        submit = st.form_submit_button("Search")
+
+    if submit:
+        with st.spinner("Searching..."):
+            try:
+                data = {
+                    "location": location,
+                    "bhk": bhk if bhk > 0 else None,
+                    "property_type": property_type,
+                    "min_price": min_price,
+                    "max_price": max_price,
+                    "limit": limit
+                }
+                resp = requests.post(f"{BACKEND_URL}/search", data=data)
+                if resp.status_code == 200:
+                    result = resp.json()
+                    st.write(f"Found {result['count']} properties for query: {result['query']}")
+                    for prop in result.get("properties", []):
+                        st.markdown(f"**{prop.get('name','Unnamed')}** - {prop.get('location','N/A')} - ₹{prop.get('price','N/A')}")
+                else:
+                    st.error(f"Search failed: {resp.text}")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
