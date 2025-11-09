@@ -8,7 +8,10 @@ This phase focuses on training a computer-vision model to **parse floorplan imag
 
 
 ## Project Structure
-project-structure/{ABE065C2-9214-4291-90FE-2B9E29548967}.png
+## Project Structure
+
+![Project Structure](project-structure/ABE065C2-9214-4291-90FE-2B9E29548967.png)
+
 
 
 ## How to run : 
@@ -28,7 +31,7 @@ inside src/backend/.env.example
 
 3. **Start the frontend application**
 ```bash
-  ython -m uvicorn app_updated:app --host 0.0.0.0 --port 8001 --reload
+  python -m uvicorn app_updated:app --host 0.0.0.0 --port 8001 --reload
 
 #### Frontend Development
 1. **Navigate to frontend directory**
