@@ -10,7 +10,7 @@ This phase focuses on training a computer-vision model to **parse floorplan imag
 ## Project Structure
 ## Project Structure
 
-![Project Structure](project-structure/{ABE065C2-9214-4291-90FE-2B9E29548967.png})
+![Project Structure](project-structure/{ABE065C2-9214-4291-90FE-2B9E29548967}.png)
 
 
 
@@ -47,7 +47,7 @@ inside src/backend/.env.example
 3. **Start the frontend application**
 ```bash
    streamlit run app_updated.py --server.port 8501
-
+```
 
 
 ##  Model Details
