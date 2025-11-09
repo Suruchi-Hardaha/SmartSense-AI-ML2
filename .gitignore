@@ -8,4 +8,5 @@ floorplan_model_weights.pth
 docker-compose.yml
 Dockerfile
 backend/models
-
+tmp_ingest
+tmp_parse

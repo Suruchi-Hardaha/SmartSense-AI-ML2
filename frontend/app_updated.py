@@ -136,7 +136,7 @@ elif page == "Floorplan Parser":
     if uploaded_file and st.button("Parse Floorplan"):
         col1, col2 = st.columns(2)
         with col1:
-            st.image(uploaded_file, caption="Uploaded Floorplan", use_column_width=True)
+            st.image(uploaded_file, caption="Uploaded Floorplan", use_container_width=True)
         
         with st.spinner("Parsing..."):
             files = {"file": (uploaded_file.name, uploaded_file, uploaded_file.type)}
@@ -158,7 +158,7 @@ elif page == "Floorplan Parser":
                 if visualize and result.get("visualized_image_base64"):
                     img = Image.open(BytesIO(base64.b64decode(result["visualized_image_base64"])))
                     st.subheader("Visualized Floorplan")
-                    st.image(img, use_column_width=True)
+                    st.image(img, use_container_width=True)
                 
                 if result.get("report_pdf_name"):
                     st.markdown(f"[Download PDF Report]({BACKEND_URL}/download-pdf/{result['report_pdf_name']})")
