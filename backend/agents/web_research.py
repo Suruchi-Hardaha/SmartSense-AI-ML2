@@ -20,7 +20,7 @@ class WebResearchAgent(BaseAgent):
         # API configurations
         self.apis = {
             "tavily": config.get("tavily_api_key") if config else None,
-            "google_places": config.get("google_places_api_key") if config else None,
+            "google_places": config.get("google_places_api_key") if config else None,# i dindnt use this api becuase it was paid
             "property_api": config.get("property_api_endpoint") if config else None
         }
         

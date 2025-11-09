@@ -63,7 +63,7 @@ smartsense-real-estate/
 
 
 
-## 🧠 Training Configuration
+## Training Configuration
 
 | Parameter        | Value |
 |------------------|--------|
@@ -73,10 +73,10 @@ smartsense-real-estate/
 | Weight decay     | 0.0005 |
 | Optimizer        | SGD |
 | Loss             | Classification + Regression (per epoch printed) |
-## 📦 Model Weights
+## Model Weights
 The trained model weights (~158 MB) can be downloaded from Google Drive:
 
-👉 [Download floorplan_model_weights.pth](https://drive.google.com/file/d/1_hluPXwpSVp6NNV97L8QagRn3SzhAaR4/view?usp=sharing)
+[Download floorplan_model_weights.pth](https://drive.google.com/file/d/1_hluPXwpSVp6NNV97L8QagRn3SzhAaR4/view?usp=sharing)
 
 **During training:**
 - Each epoch prints total classification and regression loss.
@@ -85,7 +85,7 @@ The trained model weights (~158 MB) can be downloaded from Google Drive:
 
 ---
 
-## 🧩 Dataset Split
+## Dataset Split
 
 Data was manually annotated in COCO format and split into:
 - **Train:** 60%
@@ -99,7 +99,7 @@ Data was manually annotated in COCO format and split into:
 
 ---
 
-## 📊 Evaluation Metrics (Validation Set)
+## Evaluation Metrics (Validation Set)
 
 | Metric | Description | Value |
 |---------|--------------|--------|
@@ -121,7 +121,7 @@ Data was manually annotated in COCO format and split into:
 
 ---
 
-## 🧾 Inference Script
+##  Inference Script
 
 Run inference on a single floorplan image and get a **structured JSON output**:
 
@@ -308,8 +308,8 @@ PINECONE_API_KEY=your_pinecone_key
 PINECONE_INDEX=smartsense-properties
 
 # AI Models
-EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2
-MODEL_WEIGHTS=path/to/floorplan_model_weights.pth
+EMBED_MODEL=sentence-transformers/all-roberta-large-v1
+MODEL_WEIGHTS= given  Google Drive folder link containg  .pth file 
 USE_CUDA=0
 
 # External APIs
